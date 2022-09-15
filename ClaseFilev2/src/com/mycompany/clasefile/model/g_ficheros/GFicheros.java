@@ -17,6 +17,39 @@ public class GFicheros implements interfaceGFicheros{
 
 
   
+    @Override
+    public ArrayList<File> getFicheros(String pathDir, String ext) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public ArrayList<File> getFicheros() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public ArrayList<File> getFicheros(String pathDir) {
+        
+        ArrayList lista = new ArrayList();
+        
+        File f = new File(pathDir);
+        
+        for(int i =0; i<f.listFiles().length; i++){
+            if(!f.listFiles()[i].isDirectory()){
+                lista.add(f.listFiles()[i]);
+            }
+            
+        }
+        return lista;
+    }
+
+    @Override
+    public boolean nuevoDirectorio(String pathDir, String nuevoDir) {
+        File f = new File(pathDir+"/"+nuevoDir);
+ 
+        return f.mkdir();
+    }
+    
 
  
 
@@ -80,6 +113,8 @@ public class GFicheros implements interfaceGFicheros{
       } 
            return almacenDiscos;
     }
+
+
 
 
 }

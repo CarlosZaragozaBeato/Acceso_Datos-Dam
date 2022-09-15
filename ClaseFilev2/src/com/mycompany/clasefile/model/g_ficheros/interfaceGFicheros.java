@@ -15,19 +15,18 @@ import java.util.ArrayList;
  */
 public interface interfaceGFicheros {
    
-    /*public ArrayList<File> getFicheros(String pathDir,String ext);
+    public ArrayList<File> getFicheros(String pathDir,String ext);
 
     public ArrayList<File> getFicheros();
     
-    public ArrayList<File> getFicheros(String pathDir);*/
+    public ArrayList<File> getFicheros(String pathDir);
     
     public ArrayList<File> getDir(String pathDir);
     
     public ArrayList<File> getDir();
     
-    /*
     public boolean nuevoDirectorio(String pathDir, String nuevoDir);
-    
+    /*
     public boolean eliminarFichero(String pathDir, String nombreFichero);
 
     public boolean eliminarDir(String pathDir, boolean siForzar);*/

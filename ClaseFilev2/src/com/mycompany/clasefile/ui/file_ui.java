@@ -7,9 +7,12 @@ package com.mycompany.clasefile.ui;
 import com.mycompany.clasefile.model.Discos;
 import com.mycompany.clasefile.model.es_teclado.ESTeclado;
 import com.mycompany.clasefile.model.g_ficheros.GFicheros;
+import com.mycompany.clasefile.ui.child_panel.buscarDirectorio;
+import com.mycompany.clasefile.ui.child_panel.crearDirectorio;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,20 +27,27 @@ public class file_ui extends javax.swing.JFrame {
     
     //Table Model
     
-    static String[] datos = {"Unidad", "Ocupado", "Total", "Libre"};
-    Object[][] data = new Object[0][0];
+    static String[] datosDiscos = {"Unidad", "Ocupado", "Total", "Libre"};
+    Object[][] dataDiscos = new Object[0][0];
+    
+    static String[] datosFicheros = {"Unidad", "Ocupado", "Total", "Libre"};
+    Object[][] dataFicheros = new Object[0][0];
 
-    private DefaultTableModel dftDiscos = new DefaultTableModel(data, datos);
+    private DefaultTableModel dftDiscos = new DefaultTableModel(dataDiscos, datosDiscos);
 
+    private DefaultTableModel dflFicheros = new DefaultTableModel(dataFicheros, datosFicheros);
+    
+    private ArrayList<File> listDirectorios = new ArrayList<File>();
+   
     private ArrayList<File> listFicheros = new ArrayList<File>();
 
-    private ArrayList<Discos> almacenDiscos = new ArrayList<Discos>();
-
+    private ArrayList<Discos> almacenDiscos = new ArrayList<Discos>();  
+    
     private GFicheros gFicheros = new GFicheros();
 
     private ESTeclado esTeclado = new ESTeclado();
 
-    private String ruta = "";
+    public String ruta = "";
     
     public file_ui() {
         initComponents();
@@ -77,6 +87,11 @@ public class file_ui extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        list_subcarpetas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                list_subcarpetasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(list_subcarpetas);
 
         tbl_discos.setModel(new javax.swing.table.DefaultTableModel(
@@ -171,6 +186,11 @@ public class file_ui extends javax.swing.JFrame {
                 jMenuItem2MouseClicked(evt);
             }
         });
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem2);
 
         jMenuBar1.add(jMenu2);
@@ -209,14 +229,32 @@ public class file_ui extends javax.swing.JFrame {
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
 
-        menuBuscarFicheros();
+        buscarDirectorio buscar = new buscarDirectorio(this, true);
+        buscar.setVisible(true);
+       // menuBuscarFicheros();
 
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenuItem2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem2MouseClicked
 
-        System.out.println("asdasd");
+
     }//GEN-LAST:event_jMenuItem2MouseClicked
+
+    private void list_subcarpetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_list_subcarpetasMouseClicked
+    
+    }//GEN-LAST:event_list_subcarpetasMouseClicked
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        
+        if(list_subcarpetas.getSelectedIndex() != -1){
+              crearDirectorio crear = new crearDirectorio(this, true);
+              crear.setVisible(true);
+        }else{
+        JOptionPane.showMessageDialog(null, "Por favor seleccione una carpeta",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -260,7 +298,7 @@ public class file_ui extends javax.swing.JFrame {
 
     //Rellenar la tabla de discos con los discos instalados de nuestro ordenador
     private void insertarDiscos() {
-        Object[] fila = new Object[datos.length];
+        Object[] fila = new Object[datosDiscos.length];
 
 
         for (int i = 0; i < almacenDiscos.size(); i++) {
@@ -275,29 +313,36 @@ public class file_ui extends javax.swing.JFrame {
     }
 
     //Menu para buscar nuestros directorios por carpetas
-    private void menuBuscarFicheros() {
-        System.out.println("Introduzca la ruta de busqueda de carpetas");
-        ruta = esTeclado.leerTeclado();
-        getFicheros(ruta);
-        System.out.println("");
+    public void menuBuscarFicheros(String ruta) {
+        getDirectorios(ruta);
     }
 
     //Adicion de ficheros en nuestro JList
-    private void getFicheros(String ruta) {
+    private void getDirectorios(String ruta) {
         dflCarpetas.clear();
+        ruta = ruta;
         try{
-         listFicheros = gFicheros.getDir(ruta);
+         listDirectorios = gFicheros.getDir(ruta);
        
-            for (int i = 0; i < listFicheros.size(); i++) {
-                dflCarpetas.addElement(listFicheros.get(i));
-            }
-
-        
+            for (int i = 0; i < listDirectorios.size(); i++) {
+                dflCarpetas.addElement(listDirectorios.get(i));
+            }   
         }catch(Exception e){
               dflCarpetas.addElement("No existen Carpetas");
         }
     }
+    
+    public void buscarFicheros(String ruta){
+        listFicheros = gFicheros.getFicheros(ruta);
+        for(File l: listFicheros){
+            
+        }
+    }
 
+    public void getFicheros(String nombre){
+        String carpeta = dflCarpetas.getElementAt(list_subcarpetas.getSelectedIndex()).toString();
+        gFicheros.nuevoDirectorio(ruta+carpeta, nombre);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
